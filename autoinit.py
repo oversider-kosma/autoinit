@@ -3,9 +3,10 @@
 from functools import wraps as _wraps
 from inspect import isclass as _isclass, isfunction as _isfunction
 from warnings import warn as _warn
-from types import MethodType as _MethodType
+
 
 VERSION = '0.1.0'
+
 
 class AutoinitWarning(UserWarning, ValueError):
     pass

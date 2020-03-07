@@ -16,6 +16,7 @@ print(x.__dict__)  # Output: {'a': 42, 'b': 100, 'c': 500, 'd': None, 'e': 99.99
 ```
 ### Install
 $ ```pip install git+git@github.com:oversider-kosma/autoinit.git```
+
 (pypi package coming soon)
 
 ### Why
