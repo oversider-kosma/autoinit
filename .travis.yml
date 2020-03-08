@@ -26,7 +26,9 @@ before_install:
   - if [ -n "$JYTHON" ]; then sudo cp /tmp/linuxuprising-java.list /etc/apt/sources.list.d/; fi
   - if [ -n "$JYTHON" ]; then sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 73C3DB2A 40976EAF437D05B5 3B4FE6ACC0B21F32 EA8CACC073C3DB2A; fi
   - if [ -n "$JYTHON" ]; then sudo apt-get update; fi
-  - if [ -n "$JYTHON" ]; then bash -c 'yes | apt-get install oracle-java13-installer -y --allow-unauthenticated'; fi
+  - if [ -n "$JYTHON" ]; then echo debconf shared/accepted-oracle-license-v1-2 seen true | sudo debconf-set-selections; fi
+  - if [ -n "$JYTHON" ]; then echo debconf shared/accepted-oracle-license-v1-2 select true | sudo debconf-set-selections; fi
+  - if [ -n "$JYTHON" ]; then sudo apt-get install oracle-java13-installer -y --allow-unauthenticated; fi
   - if [ -n "$JYTHON" ]; then curl -L -o jython-installer.jar $JYTHON; fi
   - if [ -n "$JYTHON" ]; then java -jar ./jython-installer.jar -s -d /opt/jython -t standard; fi
   - if [ -n "$JYTHON" ]; then sudo /opt/jython/bin/jython -m ensurepip; fi
