@@ -5,7 +5,7 @@ from inspect import isclass as _isclass, isfunction as _isfunction
 from warnings import warn as _warn
 
 
-VERSION = '0.1.0'
+VERSION = '0.1.1'
 
 
 class AutoinitWarning(UserWarning, ValueError):
