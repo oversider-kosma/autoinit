@@ -64,7 +64,10 @@ class FiveDimensionRecord:
                  u:int, v:int, dt=None, description:str=''):
         self.dt = self.dt or datetime.now()
 ```
-
+### Where
+Tested at:
+* CPython: 2.7, 3.5-3.8
+* Pypy: 2.7, 3.5, 3.6
+* Jython: 2.7
 ### TODO
-* tests
 * pypi package
