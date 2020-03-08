@@ -10,14 +10,21 @@ python:
   - "pypy3"
   - "nightly"
 
-os:
-  - linux
+matrix:
+  include:
+    - python: 2.7
+      env: JYTHON=org.python:jython-installer:2.5.3
 
 before_install:
+  - if [ -n "$JYTHON" ]; then ./before_install_jython.sh; source $HOME/myvirtualenv/bin/activate ;fi
+  - if [ -n "$JYTHON" ]; then pip install jip==0.7; fi
+  - if [ -n "$JYTHON" ]; then jip install joda-time:joda-time:2.3; fi
+  - if [ -n "$JYTHON" ]; then export CLASSPATH=$VIRTUAL_ENV/javalib/*; fi
   - python --version
   - pip install -U pip
   - pip install -U pytest
-script: pytest
+script: 
+  - pytest
 
 jobs:
   allow_failures:
