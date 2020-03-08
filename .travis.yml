@@ -8,8 +8,17 @@ python:
   - "pypy"
   - "pypy3.5"
   - "pypy3"
+  - "nightly"
+
+os:
+  - linux
+
 before_install:
   - python --version
   - pip install -U pip
   - pip install -U pytest
 script: pytest
+
+jobs:
+  allow_failures:
+  - python: nightly
