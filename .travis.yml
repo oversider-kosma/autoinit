@@ -17,7 +17,7 @@ matrix:
       env: JYTHON=https://search.maven.org/remotecontent?filepath=org/python/jython-installer/2.7.2rc1/jython-installer-2.7.2rc1.jar
 
 before_install:
-  - sh travis_before_install.sh
+  - sh .travis_before_install.sh
 script:
   - testrunner
 
