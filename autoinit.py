@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!/bin/env python
 
 from functools import wraps as _wraps
 from inspect import isclass as _isclass, isfunction as _isfunction

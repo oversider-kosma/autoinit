@@ -16,13 +16,18 @@ from setuptools import find_packages, setup, Command
 
 from autoinit import VERSION
 
+MIN_PYTHON = (2, 7, 0)
+if sys.version_info < MIN_PYTHON:
+    sys.stderr.write("Python {}.{}.{} or later is required\n".format(*MIN_PYTHON))
+    sys.exit(1)
+
 # Package meta-data.
 NAME = 'autoinit'
 DESCRIPTION = 'Python decorator for automatic initialization instance attributes'
 URL = 'https://github.com/oversider-kosma/autoinit'
 EMAIL = 'oversider_kosma@mail.ru'
 AUTHOR = 'Constantine Kosmachevski'
-REQUIRES_PYTHON = '>=3.5.0'
+REQUIRES_PYTHON = '>={}.{}.{}'.format(*MIN_PYTHON)
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -95,6 +100,7 @@ setup(
         'Development Status :: 5 - Production/Stable',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
