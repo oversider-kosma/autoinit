@@ -1,3 +1,4 @@
+sudo: true
 language: python
 python:
   - "2.7"
@@ -10,14 +11,15 @@ python:
   - "pypy3"
   - "nightly"
 
-os:
-  - linux
+matrix:
+  include:
+    - python: 2.7
+      env: JYTHON=https://search.maven.org/remotecontent?filepath=org/python/jython-installer/2.7.2rc1/jython-installer-2.7.2rc1.jar
 
 before_install:
-  - python --version
-  - pip install -U pip
-  - pip install -U pytest
-script: pytest
+  - sh .travis_before_install.sh
+script:
+  - testrunner
 
 jobs:
   allow_failures:
