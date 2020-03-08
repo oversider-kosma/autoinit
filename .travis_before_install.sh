@@ -14,7 +14,7 @@ then
     sudo dpkg -i /tmp/oracle-java13-inst.deb
     sudo apt-get install -f -y
     curl -L -o jython-installer.jar $JYTHON
-    java -jar ./jython-installer.jar -s -d /opt/jython -t standard
+    sudo java -jar ./jython-installer.jar -s -d /opt/jython -t standard
     sudo /opt/jython/bin/jython -m ensurepip
     sudo /opt/jython/bin/pip install -U pip
     sudo /opt/jython/bin/pip install -U pytest
