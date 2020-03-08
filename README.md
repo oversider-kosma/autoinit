@@ -1,3 +1,5 @@
+[![Build Status](https://api.travis-ci.org/oversider-kosma/autoinit.svg?branch=master)](https://travis-ci.org/oversider-kosma/autoinit)
+
 # autoinit
 > Python decorator for automatic initialization instance attributes
 
