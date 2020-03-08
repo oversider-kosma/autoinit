@@ -19,7 +19,7 @@ then
     sudo /opt/jython/bin/pip install -U pip
     sudo /opt/jython/bin/pip install -U pytest
     echo '#!/bin/sh' >> /tmp/testrunner
-    echo "/opt/jython/bin/pytest" >> /tmp/testrunner
+    echo "sudo /opt/jython/bin/pytest" >> /tmp/testrunner
 else
     pip install -U pip
     pip install -U pytest
