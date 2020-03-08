@@ -19,7 +19,7 @@ print(x.__dict__)
 # Output: {'a': 42, 'b': 100, 'c': 500, 'd': None, 'e': 99.99, 'f': 'some_default_value'}
 ```
 ### Install
-$ ```pip install git+git@github.com:oversider-kosma/autoinit.git```
+$ ```pip install git+https://github.com/oversider-kosma/autoinit.git```
 
 (pypi package coming soon)
 
