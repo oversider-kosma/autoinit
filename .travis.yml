@@ -17,27 +17,7 @@ matrix:
       env: JYTHON=https://search.maven.org/remotecontent?filepath=org/python/jython-installer/2.7.2rc1/jython-installer-2.7.2rc1.jar
 
 before_install:
-  - if [ -z "$JYTHON" ]; then pip install -U pip; fi
-  - if [ -z "$JYTHON" ]; then pip install -U pytest; fi
-  - if [ -z "$JYTHON" ]; then echo '#!/bin/bash' >> /tmp/testrunner; fi
-  - if [ -z "$JYTHON" ]; then echo "pytest" >> /tmp/testrunner; fi
-  - if [ -n "$JYTHON" ]; then sudo apt-get update && sudo apt-get install bash curl wget -y; fi
-  - if [ -n "$JYTHON" ]; then echo "deb http://ppa.launchpad.net/linuxuprising/java/ubuntu xenial main" | tee /tmp/linuxuprising-java.list; fi
-  - if [ -n "$JYTHON" ]; then sudo cp /tmp/linuxuprising-java.list /etc/apt/sources.list.d/; fi
-  - if [ -n "$JYTHON" ]; then sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 73C3DB2A 40976EAF437D05B5 3B4FE6ACC0B21F32 EA8CACC073C3DB2A; fi
-  - if [ -n "$JYTHON" ]; then sudo apt-get update; fi
-  - if [ -n "$JYTHON" ]; then sudo bash -c 'echo debconf shared/accepted-oracle-license-v1-2 seen true | debconf-set-selections'; fi
-  - if [ -n "$JYTHON" ]; then sudo bash -c 'echo debconf shared/accepted-oracle-license-v1-2 select true | debconf-set-selections'; fi
-  - if [ -n "$JYTHON" ]; then sudo apt-get install oracle-java13-installer -y --allow-unauthenticated; fi
-  - if [ -n "$JYTHON" ]; then curl -L -o jython-installer.jar $JYTHON; fi
-  - if [ -n "$JYTHON" ]; then java -jar ./jython-installer.jar -s -d /opt/jython -t standard; fi
-  - if [ -n "$JYTHON" ]; then sudo /opt/jython/bin/jython -m ensurepip; fi
-  - if [ -n "$JYTHON" ]; then sudo /opt/jython/bin/pip install -U pip; fi
-  - if [ -n "$JYTHON" ]; then sudo /opt/jython/bin/pip install -U pytest; fi
-  - if [ -n "$JYTHON" ]; then echo '#!/bin/bash' >> /tmp/testrunner ; fi
-  - if [ -n "$JYTHON" ]; then echo "/opt/jython/bin/pytest" >> /tmp/testrunner; fi
-  - chmod +x /tmp/testrunner
-  - sudo cp /tmp/testrunner /usr/local/bin/
+  - sh travis_before_install.sh
 script:
   - testrunner
 
