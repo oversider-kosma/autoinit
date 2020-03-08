@@ -25,6 +25,9 @@ def autoinit(*decoargs, **decokwargs):
         def __init__(self, a, b=10):
             self.a = a
             self.b = b
+
+    The decorator can be equally applied to both the __init__ method and the entire class.
+
     Options:
         reverse: bool = False # call real __init__ before setting attributes
         no_warn: bool = False # do not warn when decorator applied to not __init__
@@ -49,7 +52,9 @@ def autoinit(*decoargs, **decokwargs):
         def inner(self, *args, **kwargs):
             if reverse:
                 func(self, *args, **kwargs)
-            args_vals = args[:] + func.__defaults__[len(args) - len(args_names):]
+            args_vals = args[:]
+            if func.__defaults__:
+                args_vals += func.__defaults__[len(args) - len(args_names):]
             for k, v in zip(args_names, args_vals):
                 setattr(self, k, v)
             if not reverse:

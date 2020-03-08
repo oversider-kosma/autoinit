@@ -6,8 +6,11 @@ import pytest
 from sys import version_info
 
 from autoinit import autoinit, AutoinitWarning
+
+
 class Base_obj(object): pass
 class Base: pass
+
 
 def class_with_deco_builder(from_object=False):
     @autoinit
@@ -16,6 +19,7 @@ def class_with_deco_builder(from_object=False):
             self.c = 'in init value'
     return C
 
+
 def class_with_decorated_method_builder(from_object=True):
     class C(Base_obj if from_object else Base):
         @autoinit
@@ -23,12 +27,14 @@ def class_with_decorated_method_builder(from_object=True):
             self.c = 'in init value'
     return C
 
+
 def test_classdecorator():
     C = class_with_deco_builder()
     inst = C(1)
     assert inst.a == 1
     assert inst.b == 'default value'
     assert inst.c == 'in init value'
+
 
 if version_info.major == 2:
     def test_classdecorator_newstyle():
@@ -38,12 +44,14 @@ if version_info.major == 2:
         assert inst.b == 'default value'
         assert inst.c == 'in init value'
 
+
 def test_methoddecorator():
     C = class_with_decorated_method_builder()
     inst = C(1)
     assert inst.a == 1
     assert inst.b == 'default value'
     assert inst.c == 'in init value'
+
 
 if version_info.major == 2:
     def test_methoddecorator_newstyle():
@@ -53,12 +61,14 @@ if version_info.major == 2:
         assert inst.b == 'default value'
         assert inst.c == 'in init value'
 
+
 def test_warning_is_thrown():
     with pytest.warns(AutoinitWarning):
         class C(Base):
             @autoinit
             def not_init(self, a, b='default value'):
                 self.c = 'in init value'
+
 
 def test_warning_suppression():
     try:
@@ -78,6 +88,7 @@ def test_exception():
     else:
         raise RuntimeError('ValueError wasn\'t raised')
 
+
 def test_noreverse():
     class C(Base_obj):
         @autoinit
@@ -95,3 +106,20 @@ def test_reverse():
     inst = C(1)
     assert inst.a == 1
     assert inst.b == 2
+
+
+def test_init_noargs():
+    @autoinit
+    class C(Base_obj):
+        def __init__(self):
+           self.q = 5
+    assert C().q == 5
+
+
+if version_info.major == 2:
+    def test_init_noargs_oldstyle():
+        @autoinit
+        class C:
+            def __init__(self):
+                self.q = 5
+        assert C().q == 5
