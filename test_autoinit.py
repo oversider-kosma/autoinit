@@ -81,12 +81,8 @@ def test_warning_suppression():
 
 
 def test_exception():
-    try:
+    with pytest.raises(ValueError):
         autoinit(reverse=False)(7)
-    except ValueError:
-        pass
-    else:
-        raise RuntimeError('ValueError wasn\'t raised')
 
 
 def test_noreverse():
@@ -123,3 +119,59 @@ if version_info.major == 2:
             def __init__(self):
                 self.q = 5
         assert C().q == 5
+
+
+def test_exclude_one():
+    class C(Base_obj):
+        @autoinit(exclude='b')
+        def __init__(self, a, b, c):
+            pass
+    inst = C(1, 2, 3)
+    assert not hasattr(inst, 'b')
+
+
+def test_exclude_many():
+    @autoinit(exclude=['b', 'c'])
+    class C(Base_obj):
+        def __init__(self, a, b, c):
+            assert not hasattr(self, 'b')
+
+    inst = C(1, 2, 3)
+    assert not hasattr(inst, 'c')
+
+def test_slots():
+    @autoinit
+    class C(Base_obj):
+        __slots__ = ['a', 'b']
+        def __init__(self, a, b):
+            pass
+    inst = C(1, 2)
+    assert inst.a == 1 and inst.b == 2
+
+def test_slots_raises():
+    with pytest.raises(AttributeError):
+        @autoinit
+        class C(Base_obj):
+            __slots__ = ['a', 'b']
+            def __init__(self, a, b, c=3):
+                pass
+        inst = C(1, 2)
+
+def test_slots_excluded_not_raises():
+    @autoinit(exclude='c')
+    class C(Base_obj):
+        __slots__ = ['a', 'b']
+        def __init__(self, a, b, c=3):
+            pass
+    inst = C(1, 2)
+    assert not hasattr(inst, 'c')
+
+if version_info.major == 2:
+    def test_oldstyle_class_not_raises():
+        @autoinit
+        class C:
+            __slots__ = ['a', 'b']
+            def __init__(self, a, b, c=3):
+                pass
+        inst = C(1, 2)
+        assert inst.c == 3

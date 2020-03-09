@@ -3,9 +3,9 @@
 from functools import wraps as _wraps
 from inspect import isclass as _isclass, isfunction as _isfunction
 from warnings import warn as _warn
+from sys import version_info
 
-
-VERSION = '0.1.1'
+VERSION = '0.2.0'
 
 
 class AutoinitWarning(UserWarning, ValueError):
@@ -29,11 +29,23 @@ def autoinit(*decoargs, **decokwargs):
     The decorator can be equally applied to both the __init__ method and the entire class.
 
     Options:
+        exclude: str or iterable of str  # skip these attributes
         reverse: bool = False # call real __init__ before setting attributes
         no_warn: bool = False # do not warn when decorator applied to not __init__
     '''
     reverse = decokwargs.get('reverse', False)
     no_warn = decokwargs.get('no_warn', False)
+    exclude = decokwargs.get('exclude', [])
+
+    if version_info.major > 2:
+        unicode = str
+    else:
+        unicode = type(u"")
+
+    acceptable_str_types = (str, unicode)
+
+    if isinstance(exclude, acceptable_str_types):
+        exclude = [exclude]
 
     def inner_decorator(init_or_class):
         if _isclass(init_or_class):
@@ -56,7 +68,11 @@ def autoinit(*decoargs, **decokwargs):
             if func.__defaults__:
                 args_vals += func.__defaults__[len(args) - len(args_names):]
             for k, v in zip(args_names, args_vals):
-                setattr(self, k, v)
+                if k not in exclude:
+                    if (type(self.__class__).__name__ != 'classobj' and
+                        hasattr(self, '__slots__') and k not in self.__slots__):
+                        raise AttributeError("Can not assign attribute '%s': it is not listed in %s.__slots__" % (k, self.__class__))
+                    setattr(self, k, v)
             if not reverse:
                 func(self, *args, **kwargs)
 
