@@ -1,15 +1,26 @@
 #!/bin/env python
+# -*- coding: utf-8 -*-
+'''
+This module contains only one decorator for automatic initialization instance attributes
 
+from autoinit import autoinit
+
+@autoinit
+class C:
+    def __init__(self, a, b=10):
+        pass
+assert C(1).a==1 and C(1).b==10
+'''
 from functools import wraps as _wraps
 from inspect import isclass as _isclass, isfunction as _isfunction
 from warnings import warn as _warn
 from sys import version_info
 
 
-VERSION = '1.0.0'
+VERSION = '1.0.1'
 
 
-class AutoinitWarning(UserWarning, ValueError):
+class AutoinitWarning(UserWarning, ValueError):  # pylint: disable=missing-class-docstring
     pass
 
 
@@ -57,8 +68,9 @@ def autoinit(*decoargs, **decokwargs):
         else:
             raise ValueError("autoinit decorator should be applied to class or its __init__ method")
 
-        if (func.__name__  != '__init__' or func.__code__.co_name != '__init__') and not no_warn:
-            _warn(AutoinitWarning("autoinit decorator intended to be applied only to __init__ method (use autoinit(no_warn=True) to suppress this warning)"))
+        if (func.__name__ != '__init__' or func.__code__.co_name != '__init__') and not no_warn:
+            _warn(AutoinitWarning("autoinit decorator intended to be applied only to __init__"
+                                  " method (use autoinit(no_warn=True) to suppress this warning)"))
 
         args_names = func.__code__.co_varnames[1:func.__code__.co_argcount]
 
@@ -69,20 +81,20 @@ def autoinit(*decoargs, **decokwargs):
             args_vals = args[:]
             if func.__defaults__:
                 args_vals += func.__defaults__[len(args) - len(args_names):]
-            for k, v in zip(args_names, args_vals):
-                if k not in exclude:
+            for key, val in zip(args_names, args_vals):
+                if key not in exclude:
                     if (type(self.__class__).__name__ != 'classobj' and
-                        hasattr(self, '__slots__') and k not in self.__slots__):
-                        raise AttributeError("Can not assign attribute '%s': it is not listed in %s.__slots__" % (k, self.__class__))
-                    setattr(self, k, v)
+                            hasattr(self, '__slots__') and key not in self.__slots__):
+                        raise AttributeError("Can not assign attribute '%s': it is not "
+                                             "listed in %s.__slots__" % (key, self.__class__))
+                    setattr(self, key, val)
             if not reverse:
                 func(self, *args, **kwargs)
 
         if _isclass(init_or_class):
             init_or_class.__init__ = inner
             return init_or_class
-        else:
-            return inner
+        return inner
 
     if decoargs and (_isfunction(decoargs[0]) or _isclass(decoargs[0])):
         return inner_decorator(decoargs[0])
