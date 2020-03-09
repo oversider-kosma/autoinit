@@ -70,13 +70,10 @@ class FiveDimensionRecord:
 ```
 
 ### Options
-* `@autoinit(exclude='attr')` or `@autoinit(exclude=['attr1', 'attr2]')`
-    skip specified attributes
+* `@autoinit(exclude='attr')` or `@autoinit(exclude=['attr1', 'attr2]')`: skip specified attributes
 
-* `@autoinit(no_warn=True)`
-    do not throw warning if decorator applied to non-`__init__` method
+* `@autoinit(no_warn=True)`: do not throw warning if decorator applied to non-`__init__` method
 
-* `@autoinit(reverse=True)`
-    invert the order of actions - first call the wrapped method (which is usually `__init__`), and then do assignment
+* `@autoinit(reverse=True)`: invert the order of actions - first call the wrapped method (which is usually `__init__`), and then do assignment
 
 The decorator itself can be equally applied to both the `__init__` method and the entire class.
