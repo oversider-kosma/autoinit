@@ -33,7 +33,9 @@ here = os.path.abspath(os.path.dirname(__file__))
 
 try:
     with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
-        long_description = '\n' + f.read()
+        rdm_data = f.read().split('\n')
+        rdm_data = list(filter(lambda x: '[Build Status]' not in x, rdm_data))
+        long_description = '\n'.join(rdm_data)
 except FileNotFoundError:
     long_description = DESCRIPTION
 

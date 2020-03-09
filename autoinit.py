@@ -5,7 +5,8 @@ from inspect import isclass as _isclass, isfunction as _isfunction
 from warnings import warn as _warn
 from sys import version_info
 
-VERSION = '0.2.0'
+
+VERSION = '1.0.0'
 
 
 class AutoinitWarning(UserWarning, ValueError):
@@ -29,9 +30,10 @@ def autoinit(*decoargs, **decokwargs):
     The decorator can be equally applied to both the __init__ method and the entire class.
 
     Options:
-        exclude: str or iterable of str  # skip these attributes
-        reverse: bool = False # call real __init__ before setting attributes
-        no_warn: bool = False # do not warn when decorator applied to not __init__
+        exclude: str or iterable of strs  # skip specified attributes
+        no_warn: bool = False # do not warn when decorator applied to not __init__,
+        reverse: bool = False # call wrapped method before the assignment
+
     '''
     reverse = decokwargs.get('reverse', False)
     no_warn = decokwargs.get('no_warn', False)
