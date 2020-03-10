@@ -11,10 +11,12 @@ class C:
         pass
 assert C(1).a==1 and C(1).b==10
 '''
+
+
 from functools import wraps as _wraps
 from inspect import isclass as _isclass, isfunction as _isfunction
 from warnings import warn as _warn
-from sys import version_info
+from sys import version_info as _version_info
 
 
 VERSION = '1.0.1'
@@ -50,7 +52,7 @@ def autoinit(*decoargs, **decokwargs):
     no_warn = decokwargs.get('no_warn', False)
     exclude = decokwargs.get('exclude', [])
 
-    if version_info.major > 2:
+    if _version_info.major > 2:
         unicode = str
     else:
         unicode = type(u"")
