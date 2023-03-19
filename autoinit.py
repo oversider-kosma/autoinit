@@ -55,7 +55,8 @@ def autoinit(*decoargs, **decokwargs):
     if _version_info.major > 2:
         unicode = str
     else:
-        unicode = type(u"")
+        unicode = type(u"")  # pylint: disable=redundant-u-string-prefix
+                             # we are running on 2.7 too
 
     acceptable_str_types = (str, unicode)
 
@@ -91,7 +92,7 @@ def autoinit(*decoargs, **decokwargs):
                 if key not in exclude:
                     if (type(self.__class__).__name__ != 'classobj' and
                             hasattr(self, '__slots__') and key not in self.__slots__):
-                        raise AttributeError("Can not assign attribute '%s': it is not "
+                        raise AttributeError("Can not assign attribute '%s': it is not "  # pylint:disable=consider-using-f-string
                                              "listed in %s.__slots__" % (key, self.__class__))
                     setattr(self, key, val)
             if not reverse:
