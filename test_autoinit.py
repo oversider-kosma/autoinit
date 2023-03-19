@@ -181,3 +181,15 @@ if version_info.major == 2:
                 pass
         inst = C(1, 2)
         assert inst.c == 3
+
+def test_kwargs():
+    def foo_func():
+        pass
+
+    @autoinit
+    class C(BaseObj):
+        def __init__(self, a, some_callback):
+            pass
+
+    inst = C(1, some_callback=foo_func)
+    assert(inst.some_callback == foo_func)

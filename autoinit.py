@@ -19,7 +19,7 @@ from warnings import warn as _warn
 from sys import version_info as _version_info
 
 
-VERSION = '1.0.1'
+VERSION = '1.0.2'
 
 
 class AutoinitWarning(UserWarning, ValueError):  # pylint: disable=missing-class-docstring
@@ -83,7 +83,11 @@ def autoinit(*decoargs, **decokwargs):
             args_vals = args[:]
             if func.__defaults__:
                 args_vals += func.__defaults__[len(args) - len(args_names):]
-            for key, val in zip(args_names, args_vals):
+
+            all_kwargs = dict(zip(args_names, args_vals))
+            all_kwargs.update(kwargs)
+
+            for key, val in all_kwargs.items():
                 if key not in exclude:
                     if (type(self.__class__).__name__ != 'classobj' and
                             hasattr(self, '__slots__') and key not in self.__slots__):
