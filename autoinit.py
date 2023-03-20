@@ -11,13 +11,15 @@ class C:
         pass
 assert C(1).a==1 and C(1).b==10
 '''
+
+
 from functools import wraps as _wraps
 from inspect import isclass as _isclass, isfunction as _isfunction
 from warnings import warn as _warn
-from sys import version_info
+from sys import version_info as _version_info
 
 
-VERSION = '1.0.1'
+VERSION = '1.0.2'
 
 
 class AutoinitWarning(UserWarning, ValueError):  # pylint: disable=missing-class-docstring
@@ -50,10 +52,11 @@ def autoinit(*decoargs, **decokwargs):
     no_warn = decokwargs.get('no_warn', False)
     exclude = decokwargs.get('exclude', [])
 
-    if version_info.major > 2:
+    if _version_info.major > 2:
         unicode = str
     else:
-        unicode = type(u"")
+        unicode = type(u"")  # pylint: disable=redundant-u-string-prefix
+                             # we are running on 2.7 too
 
     acceptable_str_types = (str, unicode)
 
@@ -81,11 +84,15 @@ def autoinit(*decoargs, **decokwargs):
             args_vals = args[:]
             if func.__defaults__:
                 args_vals += func.__defaults__[len(args) - len(args_names):]
-            for key, val in zip(args_names, args_vals):
+
+            all_kwargs = dict(zip(args_names, args_vals))
+            all_kwargs.update(kwargs)
+
+            for key, val in all_kwargs.items():
                 if key not in exclude:
                     if (type(self.__class__).__name__ != 'classobj' and
                             hasattr(self, '__slots__') and key not in self.__slots__):
-                        raise AttributeError("Can not assign attribute '%s': it is not "
+                        raise AttributeError("Can not assign attribute '%s': it is not "  # pylint:disable=consider-using-f-string
                                              "listed in %s.__slots__" % (key, self.__class__))
                     setattr(self, key, val)
             if not reverse:

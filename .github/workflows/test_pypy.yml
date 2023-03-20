@@ -1,0 +1,37 @@
+name: Test autoinit over pypy
+
+on:
+  push:
+    branches:
+      - "master"
+  pull_request:
+    branches:
+      - "master"
+jobs:
+  setup-versions-from-manifest:
+    name: Setup ${{ matrix.pypy}} @ ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-20.04]
+        pypy: ["pypy-2.7", "pypy-3.7", "pypy-3.8", "pypy-3.9"]
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up pypy ${{ matrix.pypypy }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.pypy }}
+
+    - name: PyPy and Python version
+      run: pypy --version
+
+    - name: Install dependencies
+      run: |
+        pypy -m pip install --upgrade pip
+        pypy -m pip install pytest
+
+    - name: Runing tests
+      run: |
+        pypy -m pytest $(git ls-files 'test*.py')
