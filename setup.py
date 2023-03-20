@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+# pylint: skip-file
 
 # template for this file was taken from https://github.com/navdeep-G/setup.py
 
