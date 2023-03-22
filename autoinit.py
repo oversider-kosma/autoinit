@@ -1,25 +1,13 @@
 #!/bin/env python
 # -*- coding: utf-8 -*-
-'''
-This module contains only one decorator for automatic initialization instance attributes
+#pylint: disable=missing-module-docstring
 
-from autoinit import autoinit
-
-@autoinit
-class C:
-    def __init__(self, a, b=10):
-        pass
-assert C(1).a==1 and C(1).b==10
-'''
-
-
+import sys
 from functools import wraps as _wraps
-from inspect import isclass as _isclass, isfunction as _isfunction
+from inspect import isclass as _isclass,  isfunction as _isfunction
 from warnings import warn as _warn
-from sys import version_info as _version_info
 
-
-VERSION = '1.0.2'
+VERSION = '1.0.3'
 
 
 class AutoinitWarning(UserWarning, ValueError):  # pylint: disable=missing-class-docstring
@@ -28,31 +16,39 @@ class AutoinitWarning(UserWarning, ValueError):  # pylint: disable=missing-class
 
 def autoinit(*decoargs, **decokwargs):
     '''
-    Decorator for automatic initialization instance attributes
-
-        @autoinit
-        def __init__(self, a, b=10):
-            pass
+    Decorator for automatic initialization instance attributes:
+        import autoinit
+        class X:
+            @autoinit
+            def __init__(self, a, b=10):
+                pass
 
     is equivalent to
+        class X:
+            def __init__(self, a, b=10):
+                self.a = a
+                self.b = b
 
-        def __init__(self, a, b=10):
-            self.a = a
-            self.b = b
-
-    The decorator can be equally applied to both the __init__ method and the entire class.
+    Can be equally applied to both the __init__ method and the entire class.
 
     Options:
-        exclude: str or iterable of strs  # skip specified attributes
-        no_warn: bool = False # do not warn when decorator applied to not __init__,
-        reverse: bool = False # call wrapped method before the assignment
+        exclude: str | Iterable[str]
+                 skip specified attributes
+                 default: []
 
+        no_warn: bool
+                 do not warn when decorator applied to not __init__,
+                 default: False
+
+        reverse: bool
+                 call wrapped method before the assignment
+                 default: False
     '''
     reverse = decokwargs.get('reverse', False)
     no_warn = decokwargs.get('no_warn', False)
     exclude = decokwargs.get('exclude', [])
 
-    if _version_info.major > 2:
+    if sys.version_info.major > 2:
         unicode = str
     else:
         unicode = type(u"")  # pylint: disable=redundant-u-string-prefix
@@ -106,3 +102,25 @@ def autoinit(*decoargs, **decokwargs):
     if decoargs and (_isfunction(decoargs[0]) or _isclass(decoargs[0])):
         return inner_decorator(decoargs[0])
     return inner_decorator
+
+_MODULE = sys.modules[__name__]
+class _Module (type(_MODULE)): # pylint: disable=too-few-public-methods
+    def __init__(self, name, doc = None):
+        if sys.version_info.major > 2:
+            super().__init__(name, doc)
+        else:
+            super(_Module, self).__init__(name, doc)  # pylint: disable=bad-super-call, super-with-arguments
+        for attr_name in dir(_MODULE):
+            setattr(self, attr_name, getattr(_MODULE, attr_name))
+
+    def __call__(self, *decoargs, **decokwargs):
+        return autoinit(*decoargs, **decokwargs)
+
+    __doc__ = autoinit.__doc__
+
+
+sys.modules[__name__] = _Module(__name__)
+# so `import autoinit` now works as `from autoinit import autoinit`
+
+del _Module
+del _MODULE

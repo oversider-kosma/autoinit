@@ -1,4 +1,4 @@
-name: Tests over pypy
+name: Test over Pypy
 
 on:
   push:
@@ -9,22 +9,27 @@ on:
       - "master"
 jobs:
   setup-versions-from-manifest:
-    name: Setup ${{ matrix.pypy}} @ ${{ matrix.os }}
+    name: ${{ matrix.pypy}} @ ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [macos-latest, windows-latest, ubuntu-20.04]
-        pypy: ["pypy-2.7", "pypy-3.7", "pypy-3.8", "pypy-3.9"]
+        pypy: ["pypy-2.7",  "pypy-3.6", "pypy-3.7", "pypy-3.8", "pypy-3.9"]
+        exclude:
+            - os: macos-latest
+              pypy: "pypy-3.6"
+            - os: windows-latest
+              pypy: "pypy-3.6"
     steps:
     - uses: actions/checkout@v3
 
-    - name: Set up pypy ${{ matrix.pypypy }}
+    - name: Set up ${{ matrix.pypy }}
       uses: actions/setup-python@v3
       with:
         python-version: ${{ matrix.pypy }}
 
-    - name: PyPy and Python version
+    - name: Show version
       run: pypy --version
 
     - name: Install dependencies
@@ -34,4 +39,4 @@ jobs:
 
     - name: Runing tests
       run: |
-        pypy -m pytest $(git ls-files 'test*.py')
+        pypy -m pytest -s $(git ls-files 'test*.py')

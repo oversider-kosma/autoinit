@@ -189,3 +189,8 @@ def test_kwargs():
 
     inst = C(1, some_callback=foo_func)
     assert inst.some_callback == foo_func  # pylint: disable=comparison-with-callable
+
+
+def test_import_module_as_func():
+    import autoinit as autoinit_module  # pylint: disable=import-outside-toplevel
+    assert autoinit_module.autoinit is autoinit
