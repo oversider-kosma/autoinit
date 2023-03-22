@@ -20,15 +20,18 @@ x = X(42, 100, 500, None)
 print(x.__dict__)
 # Output: {'a': 42, 'b': 100, 'c': 500, 'd': None, 'e': 99.99, 'f': 'some_default_value'}
 ```
+
 ### How
 $ ```pip install autoinit```
 ### Where
 Tested in:
 * CPython: 2.7, 3.5-3.11
-* Pypy: 2.7, 3.5, 3.6, 3.7, 3.8, 3.9
+* Pypy: 2.7, 3.5-3.9
 * Jython: 2.7
 
+
 ...but with a high probability will work with other implementations as well.
+
 ### Why
 A lot of elementary assignments inside `__init__` are a fairly frequent and rather dull case.
 

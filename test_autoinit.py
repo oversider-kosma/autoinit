@@ -192,5 +192,5 @@ def test_kwargs():
 
 
 def test_import_module_as_func():
-    import autoinit as autoinit_module
+    import autoinit as autoinit_module  # pylint: disable=import-outside-toplevel
     assert autoinit_module.autoinit is autoinit
