@@ -105,7 +105,7 @@ def autoinit(*decoargs, **decokwargs):
 
 
 class _Module (type(_sys_modules[__name__])): # pylint: disable=too-few-public-methods
-    def __init__(self, name: str, doc: str | None = ...) -> None:
+    def __init__(self, name, doc=None) -> None:
         super().__init__(name, doc)
         for attr_name in dir(_sys_modules[__name__]):
             setattr(self, attr_name, getattr(_sys_modules[__name__], attr_name))
