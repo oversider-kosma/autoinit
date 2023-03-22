@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 #pylint: disable=missing-module-docstring
 
+import sys
 from functools import wraps as _wraps
 from inspect import isclass as _isclass,  isfunction as _isfunction
-from sys import version_info as _version_info, modules as _sys_modules
 from warnings import warn as _warn
 
 VERSION = '1.0.2'
@@ -48,7 +48,7 @@ def autoinit(*decoargs, **decokwargs):
     no_warn = decokwargs.get('no_warn', False)
     exclude = decokwargs.get('exclude', [])
 
-    if _version_info.major > 2:
+    if sys.version_info.major > 2:
         unicode = str
     else:
         unicode = type(u"")  # pylint: disable=redundant-u-string-prefix
@@ -103,12 +103,15 @@ def autoinit(*decoargs, **decokwargs):
         return inner_decorator(decoargs[0])
     return inner_decorator
 
-
-class _Module (type(_sys_modules[__name__])): # pylint: disable=too-few-public-methods
+_MODULE = sys.modules[__name__]
+class _Module (type(_MODULE)): # pylint: disable=too-few-public-methods
     def __init__(self, name, doc = None):
-        super().__init__(name, doc)
-        for attr_name in dir(_sys_modules[__name__]):
-            setattr(self, attr_name, getattr(_sys_modules[__name__], attr_name))
+        if sys.version_info.major > 2:
+            super().__init__(name, doc)
+        else:
+            super(_Module, self).__init__(name, doc)  # pylint: disable=bad-super-call
+        for attr_name in dir(_MODULE):
+            setattr(self, attr_name, getattr(_MODULE, attr_name))
 
     def __call__(self, *decoargs, **decokwargs):
         return autoinit(*decoargs, **decokwargs)
@@ -116,6 +119,8 @@ class _Module (type(_sys_modules[__name__])): # pylint: disable=too-few-public-m
     __doc__ = autoinit.__doc__
 
 
-_sys_modules[__name__] = _Module(__name__)
-del _Module
+sys.modules[__name__] = _Module(__name__)
 # so `import autoinit` now works as `from autoinit import autoinit`
+
+del _Module
+del _MODULE
