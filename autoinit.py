@@ -109,7 +109,7 @@ class _Module (type(_MODULE)): # pylint: disable=too-few-public-methods
         if sys.version_info.major > 2:
             super().__init__(name, doc)
         else:
-            super(_Module, self).__init__(name, doc)  # pylint: disable=bad-super-call
+            super(_Module, self).__init__(name, doc)  # pylint: disable=bad-super-call, super-with-arguments
         for attr_name in dir(_MODULE):
             setattr(self, attr_name, getattr(_MODULE, attr_name))
 
