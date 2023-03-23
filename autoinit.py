@@ -7,7 +7,7 @@ from functools import wraps as _wraps
 from inspect import isclass as _isclass,  isfunction as _isfunction
 from warnings import warn as _warn
 
-VERSION = '1.0.3'
+VERSION = '1.1.0'
 
 
 class AutoinitWarning(UserWarning, ValueError):  # pylint: disable=missing-class-docstring
