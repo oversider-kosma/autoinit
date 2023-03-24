@@ -16,16 +16,18 @@ try:
     else:
         import importlib.metadata
         VERSION = importlib.metadata.version("autoinit")
-except:
+except ImportError as exc:
     try:
-        with open(path.join(path.split(__file__)[0], '..', 'pyproject.toml')) as config:
+        with open(path.join(path.split(__file__)[0], '..', 'pyproject.toml'),
+                  encoding='utf-8') as config:
             for line in config:
                 if line.startswith('version'):
                     VERSION = literal_eval(line.split('=')[1].strip())
                     break
             else:
-                raise ValueError()
-    except:
+                raise ValueError("varsion info not found in pyproject.toml")  # pylint: disable=raise-missing-from
+
+    except ValueError:
         _warn(Warning("The version cannot be determined. Is the package properly installed?"))
         VERSION = None
 
