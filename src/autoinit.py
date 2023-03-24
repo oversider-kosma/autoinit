@@ -3,12 +3,31 @@
 #pylint: disable=missing-module-docstring
 
 import sys
+from ast import literal_eval
+from os import path
 from functools import wraps as _wraps
 from inspect import isclass as _isclass,  isfunction as _isfunction
 from warnings import warn as _warn
 
-VERSION = '1.1.0'
-
+try:
+    if sys.version_info[:2] < (3,8):
+        import importlib_metadata
+        VERSION = importlib_metadata.version("autoinit")
+    else:
+        import importlib.metadata
+        VERSION = importlib.metadata.version("autoinit")
+except:
+    try:
+        with open(path.join(path.split(__file__)[0], '..', 'pyproject.toml')) as config:
+            for line in config:
+                if line.startswith('version'):
+                    VERSION = literal_eval(line.split('=')[1].strip())
+                    break
+            else:
+                raise ValueError()
+    except:
+        _warn(Warning("The version cannot be determined. Is the package properly installed?"))
+        VERSION = None
 
 class AutoinitWarning(UserWarning, ValueError):  # pylint: disable=missing-class-docstring
     pass

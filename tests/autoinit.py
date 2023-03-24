@@ -1,0 +1,1 @@
+../src/autoinit.py
