@@ -3,11 +3,19 @@
 # pylint: disable=no-member, unused-variable, too-few-public-methods, invalid-name, unused-argument
 # pylint: disable=missing-class-docstring, missing-function-docstring, missing-module-docstring
 
-from sys import version_info
-
+import os
+import sys
 import pytest
 
-from autoinit import autoinit, AutoinitWarning
+
+
+# let's be sure we importing testing version, not system-installed (if any)
+_path = os.path.split(os.path.abspath(__file__))[0]
+_path = os.path.join(_path, '..', 'src')
+sys.path.insert(0, _path)
+del _path
+
+from autoinit import autoinit, AutoinitWarning # pylint: disable=wrong-import-position
 
 
 class BaseObj(object):  #pylint: disable=useless-object-inheritance
@@ -42,7 +50,7 @@ def test_classdecorator():
     assert inst.c == 'in init value'
 
 
-if version_info.major == 2:
+if sys.version_info.major == 2:
     def test_classdecorator_newstyle():
         C = class_with_deco_builder(from_object=True)
         inst = C(1)
@@ -59,7 +67,7 @@ def test_methoddecorator():
     assert inst.c == 'in init value'
 
 
-if version_info.major == 2:
+if sys.version_info.major == 2:
     def test_methoddecorator_newstyle():
         C = class_with_decorated_method_builder(from_object=True)
         inst = C(1)
@@ -114,7 +122,7 @@ def test_init_noargs():
     assert C().q == 5
 
 
-if version_info.major == 2:
+if sys.version_info.major == 2:
     def test_init_noargs_oldstyle():
         @autoinit
         class C:
@@ -168,7 +176,7 @@ def test_slots_excluded_not_raises():
     inst = C(1, 2)
     assert not hasattr(inst, 'c')
 
-if version_info.major == 2:
+if sys.version_info.major == 2:
     def test_oldstyle_class_not_raises():
         @autoinit
         class C:

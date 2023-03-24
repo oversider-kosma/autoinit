@@ -3,11 +3,14 @@
 #pylint: disable=missing-module-docstring
 
 import sys
+# from ast import literal_eval
+# from os import path
 from functools import wraps as _wraps
 from inspect import isclass as _isclass,  isfunction as _isfunction
 from warnings import warn as _warn
 
-VERSION = '1.1.0'
+
+__version__ = "1.1.1"
 
 
 class AutoinitWarning(UserWarning, ValueError):  # pylint: disable=missing-class-docstring
